@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Display with Time Zone</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .time-display {
+            font-size: 24px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="utc-time" class="time-display">Loading UTC Time...</div>
+    <div id="local-time" class="time-display">Loading Local Time...</div>
+    <div id="time-zone" class="time-display">Loading Time Zone...</div>
+
+    <script>
+        function formatDateTime(date, isUTC=false) {
+            const year = isUTC ? date.getUTCFullYear() : date.getFullYear();
+            const month = isUTC ? date.getUTCMonth() : date.getMonth();
+            const day = isUTC ? date.getUTCDate() : date.getDate();
+            const hour = isUTC ? date.getUTCHours() : date.getHours();
+            const minute = isUTC ? date.getUTCMinutes() : date.getMinutes();
+            const second = isUTC ? date.getUTCSeconds() : date.getSeconds();
+
+            return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')} ` +
+                   `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}` +
+                   `${isUTC ? ' UTC' : ''}`;
+        }
+
+        function updateTime() {
+            const now = new Date();
+
+            // UTC Time
+            document.getElementById('utc-time').textContent = `Current UTC Time: ${formatDateTime(now, true)}`;
+
+            // Local Time
+            document.getElementById('local-time').textContent = `Local Time and Date: ${formatDateTime(now)}`;
+
+            // Time Zone Information
+            const timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            document.getElementById('time-zone').textContent = `Your Time Zone: ${timeZoneName}`;
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+
+        // Initial call to display the time immediately
+        updateTime();
+    </script>
+</body>
+</html>
+
